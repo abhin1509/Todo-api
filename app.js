@@ -44,3 +44,63 @@ app.get('/api/v1/list', async (req, res) => {
       });
    }
 });
+
+//* To update
+app.put('/api/v1/list/:id', async (req, res) => {
+   try {
+      const id = req.params.id;
+      let todo = await Todo.findById(id);
+   
+      if(!todo) {
+         return res.status(500).json({
+            success: false,
+            message: "Todo not found"
+         });
+      }
+   
+      todo = await Todo.findByIdAndUpdate(id, req.body, {
+         new: true,
+         useFindAndModify: false,
+         runValidators: true
+      });
+   
+      res.status(201).json({
+         success: true,
+         message: "updated successfully",
+         todo
+      });   
+   } catch (error) {
+      res.status(400).json({
+         success: true,
+         message: "ERROR"
+      });
+   }
+});
+
+
+//*    To delete
+app.delete('/api/v1/list/:id', async (req, res) => {
+   
+   try {
+      const id = req.params.id;
+      const todo = await Todo.findById(id);
+      if(!todo) {
+         return res.status(500).json({
+            success: false,
+            message: "todo not found"
+         })
+      }
+
+      await todo.remove();
+
+      res.status(200).json({
+         success: true,
+         message: "todo is deleted successfully"
+      });
+   } catch (error) {
+      res.status(400).json({
+         success: true,
+         message: "ERROR"
+      });
+   }
+});
