@@ -12,13 +12,6 @@ mongoose.connect(dbURI, ({useNewUrlParser:true, useUnifiedTopology: true})).then
    app.listen(3000);
 }).catch((err) => console.log(err));
 
-// DB schema
-const todoSchema = new mongoose.Schema({
-   name: String,
-   description: String
-});
-
-const Todo = new mongoose.model("Todo", todoSchema);
 
 // To create
 app.post('/api/v1/list/new', async (req, res) => {
