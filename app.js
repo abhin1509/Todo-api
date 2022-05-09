@@ -22,18 +22,32 @@ const Todo = new mongoose.model("Todo", todoSchema);
 
 // To create
 app.post('/api/v1/list/new', async (req, res) => {
-   const todo = await Todo.create(req.body);
-   res.status(201).json({
-      success: true,
-      todo
-   })
+   try {
+      const todo = await Todo.create(req.body);
+      res.status(201).json({
+         success: true,
+         todo
+      });   
+   } catch (error) {
+      res.status(400).json({
+         success: true,
+         message: "ERROR"
+      });
+   }
 });
 
 // To read
 app.get('/api/v1/list', async (req, res) => {
-   const todo = await Todo.find();
-   res.status(200).json({
-      success: true,
-      todo
-   })
+   try {
+      const todo = await Todo.find();
+      res.status(200).json({
+         success: true,
+         todo
+      });   
+   } catch (error) {
+      res.status(400).json({
+         success: true,
+         message: "ERROR"
+      });
+   }
 });
