@@ -12,28 +12,95 @@ mongoose.connect(dbURI, ({useNewUrlParser:true, useUnifiedTopology: true})).then
    app.listen(3000);
 }).catch((err) => console.log(err));
 
-// DB schema
-const todoSchema = new mongoose.Schema({
-   name: String,
-   description: String
-});
-
-const Todo = new mongoose.model("Todo", todoSchema);
 
 // To create
 app.post('/api/v1/list/new', async (req, res) => {
-   const todo = await Todo.create(req.body);
-   res.status(201).json({
-      success: true,
-      todo
-   })
+   try {
+      const todo = await Todo.create(req.body);
+      res.status(201).json({
+         success: true,
+         todo
+      });   
+   } catch (error) {
+      res.status(400).json({
+         success: true,
+         message: "ERROR"
+      });
+   }
 });
 
 // To read
 app.get('/api/v1/list', async (req, res) => {
-   const todo = await Todo.find();
-   res.status(200).json({
-      success: true,
-      todo
-   })
+   try {
+      const todo = await Todo.find();
+      res.status(200).json({
+         success: true,
+         todo
+      });   
+   } catch (error) {
+      res.status(400).json({
+         success: true,
+         message: "ERROR"
+      });
+   }
+});
+
+//* To update
+app.put('/api/v1/list/:id', async (req, res) => {
+   try {
+      const id = req.params.id;
+      let todo = await Todo.findById(id);
+   
+      if(!todo) {
+         return res.status(500).json({
+            success: false,
+            message: "Todo not found"
+         });
+      }
+   
+      todo = await Todo.findByIdAndUpdate(id, req.body, {
+         new: true,
+         useFindAndModify: false,
+         runValidators: true
+      });
+   
+      res.status(201).json({
+         success: true,
+         message: "updated successfully",
+         todo
+      });   
+   } catch (error) {
+      res.status(400).json({
+         success: true,
+         message: "ERROR"
+      });
+   }
+});
+
+
+//*    To delete
+app.delete('/api/v1/list/:id', async (req, res) => {
+   
+   try {
+      const id = req.params.id;
+      const todo = await Todo.findById(id);
+      if(!todo) {
+         return res.status(500).json({
+            success: false,
+            message: "todo not found"
+         })
+      }
+
+      await todo.remove();
+
+      res.status(200).json({
+         success: true,
+         message: "todo is deleted successfully"
+      });
+   } catch (error) {
+      res.status(400).json({
+         success: true,
+         message: "ERROR"
+      });
+   }
 });
