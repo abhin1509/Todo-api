@@ -53,7 +53,7 @@ app.put('/api/v1/list/:id', async (req, res) => {
       let todo = await Todo.findById(id);
    
       if(!todo) {
-         return res.status(500).json({
+         return res.status(404).json({
             success: false,
             message: "Todo not found"
          });
@@ -65,7 +65,7 @@ app.put('/api/v1/list/:id', async (req, res) => {
          runValidators: true
       });
    
-      res.status(201).json({
+      res.status(202).json({
          success: true,
          message: "updated successfully",
          todo
@@ -86,7 +86,7 @@ app.delete('/api/v1/list/:id', async (req, res) => {
       const id = req.params.id;
       const todo = await Todo.findById(id);
       if(!todo) {
-         return res.status(500).json({
+         return res.status(404).json({
             success: false,
             message: "todo not found"
          })
@@ -94,7 +94,7 @@ app.delete('/api/v1/list/:id', async (req, res) => {
 
       await todo.remove();
 
-      res.status(200).json({
+      res.status(202).json({
          success: true,
          message: "todo is deleted successfully"
       });
