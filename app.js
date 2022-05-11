@@ -24,7 +24,6 @@ app.post('/api/v1/list/new', async (req, res) => {
       });   
    } catch (error) {
       res.status(400).json({
-         success: true,
          message: "ERROR"
       });
    }
@@ -40,7 +39,6 @@ app.get('/api/v1/list', async (req, res) => {
       });   
    } catch (error) {
       res.status(400).json({
-         success: true,
          message: "ERROR"
       });
    }
@@ -72,7 +70,6 @@ app.put('/api/v1/list/:id', async (req, res) => {
       });   
    } catch (error) {
       res.status(400).json({
-         success: true,
          message: "ERROR"
       });
    }
@@ -100,7 +97,6 @@ app.delete('/api/v1/list/:id', async (req, res) => {
       });
    } catch (error) {
       res.status(400).json({
-         success: true,
          message: "ERROR"
       });
    }
