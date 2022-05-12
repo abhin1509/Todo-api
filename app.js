@@ -17,29 +17,43 @@ mongoose.connect(process.env.DB_CONNECTION, ({useNewUrlParser:true, useUnifiedTo
 // To create
 app.post('/api/v1/list/new', async (req, res) => {
    try {
+      /*if(!req.body.hasOwnProperty('description')) { // validation check
+         return res.status(404).json({
+            success: false,
+            message: "Enter correct field name",
+            items: []
+         });
+      }*/
       const todo = await Todo.create(req.body);
       res.status(201).json({
          success: true,
-         todo
+         message: "item created successfully",
+         items: todo
       });   
    } catch (error) {
-      res.status(400).json({
-         message: "ERROR"
+      res.status(500).json({
+         success: false,
+         message: "ERROR",
+         items: []
       });
    }
 });
 
+
 // To read
 app.get('/api/v1/list', async (req, res) => {
    try {
-      const todo = await Todo.find();
+      const todo = await Todo.find().select('-__v');
       res.status(200).json({
          success: true,
-         todo
+         message: "Successfully fetched all the items",
+         items: todo
       });   
    } catch (error) {
-      res.status(400).json({
-         message: "ERROR"
+      res.status(500).json({
+         success: false,
+         message: "ERROR",
+         items: []
       });
    }
 });
@@ -53,7 +67,8 @@ app.put('/api/v1/list/:id', async (req, res) => {
       if(!todo) {
          return res.status(404).json({
             success: false,
-            message: "Todo not found"
+            message: "Todo not found",
+            items: []
          });
       }
    
@@ -66,11 +81,13 @@ app.put('/api/v1/list/:id', async (req, res) => {
       res.status(202).json({
          success: true,
          message: "updated successfully",
-         todo
+         items: todo
       });   
    } catch (error) {
-      res.status(400).json({
-         message: "ERROR"
+      res.status(500).json({
+         success: false,
+         message: "ERROR",
+         items: []
       });
    }
 });
@@ -85,7 +102,8 @@ app.delete('/api/v1/list/:id', async (req, res) => {
       if(!todo) {
          return res.status(404).json({
             success: false,
-            message: "todo not found"
+            message: "todo not found",
+            items: []
          })
       }
 
@@ -93,11 +111,14 @@ app.delete('/api/v1/list/:id', async (req, res) => {
 
       res.status(202).json({
          success: true,
-         message: "todo is deleted successfully"
+         message: "todo is deleted successfully",
+         items: todo
       });
    } catch (error) {
-      res.status(400).json({
-         message: "ERROR"
+      res.status(500).json({
+         success: false,
+         message: "ERROR",
+         items: []
       });
    }
 });
