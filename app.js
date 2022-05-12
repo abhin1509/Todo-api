@@ -13,6 +13,14 @@ mongoose.connect(process.env.DB_CONNECTION, ({useNewUrlParser:true, useUnifiedTo
    app.listen(3000);
 }).catch((err) => console.log(err));
 
+// To send response
+sendResponse = (res, statusCode, bool, msg, todo) => {
+   return res.status(statusCode).json({
+      success: bool,
+      message: msg,
+      items: todo
+   });
+}
 
 // To create
 app.post('/api/v1/list/new', async (req, res) => {
@@ -39,22 +47,14 @@ app.post('/api/v1/list/new', async (req, res) => {
    }
 });
 
-
 // To read
 app.get('/api/v1/list', async (req, res) => {
    try {
       const todo = await Todo.find().select('-__v');
-      res.status(200).json({
-         success: true,
-         message: "Successfully fetched all the items",
-         items: todo
-      });   
+      return sendResponse(res, 200, true, 'Successfully fetched all the items', todo);
+
    } catch (error) {
-      res.status(500).json({
-         success: false,
-         message: "ERROR",
-         items: []
-      });
+      sendResponse(res, 500, false, 'ERROR', []);
    }
 });
 
@@ -84,11 +84,7 @@ app.put('/api/v1/list/:id', async (req, res) => {
          items: todo
       });   
    } catch (error) {
-      res.status(500).json({
-         success: false,
-         message: "ERROR",
-         items: []
-      });
+      sendResponse(res, 500, false, 'ERROR', []);
    }
 });
 
