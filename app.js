@@ -22,7 +22,8 @@ sendResponse = (res, statusCode, bool, msg, todo) => {
    });
 }
 
-// To create
+
+// Create endpoint
 app.post('/api/v1/list/new', async (req, res) => {
    try {
       /*if(!req.body.hasOwnProperty('description')) { // validation check
