@@ -22,7 +22,6 @@ sendResponse = (res, statusCode, bool, msg, todo) => {
    });
 }
 
-
 // Create endpoint
 app.post('/api/v1/list/new', async (req, res) => {
    try {
@@ -34,17 +33,10 @@ app.post('/api/v1/list/new', async (req, res) => {
          });
       }*/
       const todo = await Todo.create(req.body);
-      res.status(201).json({
-         success: true,
-         message: "item created successfully",
-         items: todo
-      });   
+      return sendResponse(res, 201, true, 'item created successfully', todo);
+
    } catch (error) {
-      res.status(500).json({
-         success: false,
-         message: "ERROR",
-         items: []
-      });
+      sendResponse(res, 500, false, 'ERROR', []);
    }
 });
 
@@ -66,11 +58,7 @@ app.put('/api/v1/list/:id', async (req, res) => {
       let todo = await Todo.findById(id);
    
       if(!todo) {
-         return res.status(404).json({
-            success: false,
-            message: "Todo not found",
-            items: []
-         });
+         return sendResponse(res, 404, false, 'Todo not found', []);
       }
    
       todo = await Todo.findByIdAndUpdate(id, req.body, {
@@ -78,12 +66,8 @@ app.put('/api/v1/list/:id', async (req, res) => {
          useFindAndModify: false,
          runValidators: true
       });
-   
-      res.status(202).json({
-         success: true,
-         message: "updated successfully",
-         items: todo
-      });   
+      return sendResponse(res, 202, true, 'updated successfully', todo);
+
    } catch (error) {
       sendResponse(res, 500, false, 'ERROR', []);
    }
@@ -97,25 +81,13 @@ app.delete('/api/v1/list/:id', async (req, res) => {
       const id = req.params.id;
       const todo = await Todo.findById(id);
       if(!todo) {
-         return res.status(404).json({
-            success: false,
-            message: "todo not found",
-            items: []
-         })
+         return sendResponse(res, 404, false, 'Todo not found', []);
       }
 
       await todo.remove();
+      return sendResponse(res, 202, true, 'todo is deleted successfully', todo);
 
-      res.status(202).json({
-         success: true,
-         message: "todo is deleted successfully",
-         items: todo
-      });
    } catch (error) {
-      res.status(500).json({
-         success: false,
-         message: "ERROR",
-         items: []
-      });
+      sendResponse(res, 500, false, 'ERROR', []);
    }
 });
